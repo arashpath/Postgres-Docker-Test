@@ -18,9 +18,9 @@
             "TunnelAuthentication": 0
         },
         "2": {
-            "Name": "postdock_pgmaster",
+            "Name": "postdock_node1",
             "Group": "PostDock",
-            "Host": "pgmaster",
+            "Host": "node1",
             "Port": 5432,
             "MaintenanceDB": "monkey_db",
             "Username": "monkey_user",
@@ -35,9 +35,26 @@
             "TunnelAuthentication": 0
         },
         "3": {
-            "Name": "postdock_pgslave1",
+            "Name": "postdock_node2",
             "Group": "PostDock",
-            "Host": "pgslave1",
+            "Host": "node2",
+            "Port": 5432,
+            "MaintenanceDB": "monkey_db",
+            "Username": "monkey_user",
+            "SSLMode": "prefer",
+            "PassFile": "/var/run/secrets/pg_passwd",
+            "SSLCert": "<STORAGE_DIR>/.postgresql/postgresql.crt",
+            "SSLKey": "<STORAGE_DIR>/.postgresql/postgresql.key",
+            "SSLCompression": 0,
+            "Timeout": 0,
+            "UseSSHTunnel": 0,
+            "TunnelPort": "22",
+            "TunnelAuthentication": 0
+        },
+        "4": {
+            "Name": "postdock_node3",
+            "Group": "PostDock",
+            "Host": "node3",
             "Port": 5432,
             "MaintenanceDB": "monkey_db",
             "Username": "monkey_user",
