@@ -5,28 +5,28 @@ PostgreSQL cluster with **High Availability** and **Self Healing** features for 
 ![Formula](https://raw.githubusercontent.com/paunin/PostDock/master/artwork/formula2.png)
 
 
-- [Info](#info)
-  * [Features](#features)
-  * [What's in the box](#whats-in-the-box)
-  * [Docker images tags convention](#docker-images-tags-convention)
-- [Start cluster with docker-compose](#start-cluster-with-docker-compose)
-- [Adaptive mode](#adaptive-mode)
-- [SSH access](#ssh-access)
-- [Replication slots](#replication-slots)
-- [Configuring the cluster](#configuring-the-cluster)
-  * [Postgres](#postgres)
-  * [Pgpool](#pgpool)
-  * [Barman](#barman)
-  * [Other configurations](#other-configurations)
-- [Extended version of postgres](#extended-version-of-postgres)
-- [Backups and recovery](#backups-and-recovery)
-- [Health-checks](#health-checks)
-- [Useful commands](#useful-commands)
-- [Publications](#publications)
-- [Scenarios](#scenarios)
-- [How to contribute](#how-to-contribute)
-- [FAQ](#faq)
-- [Documentation and manuals](#documentation-and-manuals)
+- [PostDock - Postgres + Docker](#postdock---postgres--docker)
+  - [Info](#info)
+    - [Features](#features)
+    - [What's in the box](#whats-in-the-box)
+  - [Start cluster with docker-compose](#start-cluster-with-docker-compose)
+  - [Configuring the cluster](#configuring-the-cluster)
+    - [Postgres](#postgres)
+    - [Pgpool](#pgpool)
+    - [Barman](#barman)
+    - [Other configurations](#other-configurations)
+  - [Adaptive mode](#adaptive-mode)
+  - [SSH access](#ssh-access)
+  - [Replication slots](#replication-slots)
+  - [Extended version of postgres](#extended-version-of-postgres)
+  - [Backups and recovery](#backups-and-recovery)
+  - [Health-checks](#health-checks)
+  - [Useful commands](#useful-commands)
+  - [Scenarios](#scenarios)
+  - [Publications](#publications)
+  - [How to contribute](#how-to-contribute)
+  - [FAQ](#faq)
+  - [Documentation and manuals](#documentation-and-manuals)
 
 -------
 
@@ -50,27 +50,6 @@ This project includes:
 * Examples of usage(suitable for production environment as architecture has fault protection with auto failover)
     * example of [docker-compose](docker-compose.yml) file to start this cluster.
 
-### Docker images tags convention
-
-Taking into account that PostDock project itself has versioning schema, all docker images produced by the repository have schema - `postdock/<component>:<postdock_version>-<component><component_version>-<sub_component><sub_component_version>[...]`, where:
-
-* `<postdock_version>` - semantic version without `bug-fix` component (can be `1.1`,`1.2`,...)
-* `<component>`, `<component_version>` - depends on component:
-    * `postgres`,`postgres-extended` - major and minor version without dot in between(can be `95`,`96`,`10`)
-    * `pgpool` - major and minor version of component without dot in between(can be `33`,`36`,`37`)
-    * `barman` - major version only (can be `23`,`24`)
-* `<sub_component>`, `<sub_component_version>` - depends on component:
-    * for `postgres` - `repmgr` can be `3.2`
-    * for `barman` - `postgres` can be `9.6`, `10`
-    * for `pgpool` - `postgres` can be `9.6`, `10`
-
-Aliases are available **(not recommended to use for production)**:
-
-* `postdock/<component>:latest-<component><component_version>[-<sub_component><sub_component_version>[...]]` - refers to the latest release of the postdock, certain version of the component, certain version of the sub-components(e.g. `postdock/postgres:latest-postgres101-repmgr32`,`postdock/postgres:latest-barman23-postgres101`)
-* `postdock/<component>:latest` - refers to the latest release of the postdock and the latest versions of all the components and sub-components (e.g. `postdock/postgres:latest`)
-* `postdock/<component>:edge` - refers to build of postdock from master with the latest version the component, and all sub-components (e.g. `postdock/postgres:edge`)
-
-
 ## Start cluster with docker-compose
 
 To start cluster run it as normal `docker-compose` application `docker-compose -f docker-compose.yml up -d pgmaster pgslave1 pgslave2 pgslave3 pgslave4 pgpool backup`
@@ -78,11 +57,11 @@ To start cluster run it as normal `docker-compose` application `docker-compose -
 Schema of the example cluster:
 
 ```
-pgmaster (primary node1)  --|
-|- pgslave1 (node2)       --|
-|  |- pgslave2 (node3)    --|----pgpool (master_slave_mode stream)
-|- pgslave3 (node4)       --|
-   |- pgslave4 (node5)    --|
+node1 (primary)        --|
+|  |- backup (backup)  --|
+|                      --|----pgpool (master_slave_mode stream)
+|- node2 (slave)       --|
+|- node3 (slave)       --|
 ```
 
 Each `postgres` node (`pgmaster`, `pgslaveX`) is managed by `repmgr/repmgrd`. It allows to use automatic `failover` and check cluster status.
@@ -95,7 +74,7 @@ You can configure any node of the cluster(`postgres.conf`) or pgpool(`pgpool.con
 
 ### Postgres
 
-For the rest - you better **follow** the advise and look into the [src/Postgres.Dockerfile](Postgres.Dockerfile) file - it full of comments :)
+For the rest - you better **follow** the advise and look into the [Postgres.Dockerfile](Postgres.Dockerfile) file - it full of comments :)
 
 ### Pgpool
 
