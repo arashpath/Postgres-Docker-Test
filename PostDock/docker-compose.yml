@@ -3,9 +3,9 @@ version: "3.1"
 services:
 
     node1:
-        build:
-            context: .
-            dockerfile: Postgres.Dockerfile
+#        build:
+#            context: .
+#            dockerfile: Postgres.Dockerfile
         image: postdock/postgres
         environment:
             NODE_ID: 1
@@ -36,9 +36,9 @@ services:
             pd_net:
 
     node2:
-        build:
-            context: .
-            dockerfile: Postgres.Dockerfile
+#       build:
+#            context: .
+#            dockerfile: Postgres.Dockerfile
         image: postdock/postgres
         environment:
             NODE_ID: 2
@@ -50,6 +50,11 @@ services:
             CLEAN_OVER_REWIND: 1
             CONFIGS_DELIMITER_SYMBOL: ;
             CONFIGS: "max_replication_slots:10"
+            #defaults:
+            CLUSTER_NAME: pg_pd_net # default is pg_pd_net
+            REPLICATION_DB: replication_db # default is replication_db
+            REPLICATION_USER: replication_user # default is replication_user
+            REPLICATION_PASSWORD: replication_pass # default is replication_pass
         volumes:
             - node2:/var/lib/postgresql/data
             - ./ssh:/home/postgres/.ssh/keys
@@ -59,9 +64,9 @@ services:
             - node1
 
     node3:
-        build:
-            context: .
-            dockerfile: Postgres.Dockerfile
+#       build:
+#            context: .
+#            dockerfile: Postgres.Dockerfile
         image: postdock/postgres
         environment:
             NODE_ID: 3
@@ -73,6 +78,11 @@ services:
             CLEAN_OVER_REWIND: 1
             CONFIGS_DELIMITER_SYMBOL: ;
             CONFIGS: "max_replication_slots:10"
+            #defaults:
+            CLUSTER_NAME: pg_pd_net # default is pg_pd_net
+            REPLICATION_DB: replication_db # default is replication_db
+            REPLICATION_USER: replication_user # default is replication_user
+            REPLICATION_PASSWORD: replication_pass # default is replication_pass
         volumes:
             - node3:/var/lib/postgresql/data
             - ./ssh:/home/postgres/.ssh/keys
@@ -82,9 +92,9 @@ services:
             - node1
 
     backup:
-        build:
-            context: .
-            dockerfile: Barman.Dockerfile
+#       build:
+#            context: .
+#            dockerfile: Barman.Dockerfile
         image: postdock/barman
         environment:
             REPLICATION_USER: replication_user
@@ -102,9 +112,9 @@ services:
             pd_net:
 
     pgpool:
-        build:
-            context: .
-            dockerfile: Pgpool.Dockerfile
+#       build:
+#            context: .
+#            dockerfile: Pgpool.Dockerfile
         image: postdock/pgpool
         environment:
             PCP_USER: pcp_user
